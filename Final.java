@@ -6,17 +6,62 @@ public class Final implements Observer
     private ArrayList rank = new ArrayList();
 
     public static void main(String[] args) {
-        new Final();
+        new Final().run();
     }
 
-    Final()
+    private boolean loop()
     {
-        ArrayList<ThreadRunner> runners = new ArrayList<ThreadRunner>();
+        System.out.println("Welcome to the Marathon Race Runner Program");
 
-        runners.add(new ThreadRunner("Tortoise", 0, 10));
-        runners.add(new ThreadRunner("Hare", 90, 100));
-        runners.add(new ThreadRunner("Dog", 40, 50));
-        runners.add(new ThreadRunner("Cat", 75, 30));
+        ArrayList<ThreadRunner> runners = null;
+
+        System.out.println("Select your data source:");
+        System.out.println("");
+        System.out.println("1. Derby database");
+        System.out.println("2. XML file");
+        System.out.println("3. Text file");
+        System.out.println("4. Default two runners");
+        System.out.println("5. Exit");
+        System.out.println("");
+
+        boolean continueFlag = false;
+        int choice;
+
+        while( continueFlag == false )
+        {
+            DataSource source;
+            choice = Reader.readInt("Enter your choice: ");
+
+            switch( choice )
+            {
+                case 1:
+                    source = new DerbyDB();
+                    runners = source.getRunners();
+                    continueFlag = true;
+                    break;
+                case 2:
+                    source = new XML();
+                    runners = source.getRunners();
+                    continueFlag = true;
+                    break;
+                case 3:
+                    source = new TextFile();
+                    runners = source.getRunners();
+                    continueFlag = true;
+                    break;
+                case 4:
+                    runners.add(new ThreadRunner("Tortoise", 0, 10));
+                    runners.add(new ThreadRunner("Hare", 90, 100));
+                    continueFlag = true;
+                    break;
+                case 5:
+                    return true;
+                default:
+                    System.out.println("Please input a number between 1 and 5.");
+                    break;
+            }
+
+        }
 
         Iterator it = runners.iterator();
         while( it.hasNext() ) {
@@ -47,6 +92,27 @@ public class Final implements Observer
             System.out.println(it.next() + ": You beat me fair and square.");
         }
 
+        return false;
+    }
+
+    public void run()
+    {
+        while( true )
+        {
+            rank.clear();
+            boolean flag = loop();
+            if( flag == true )
+                break;
+            else
+                System.out.println("Press any key to continue . . .");
+        }
+
+
+        System.out.println("Thank you for using my Marathon Race Program");
+    }
+
+    public Final()
+    {
 
     }
 

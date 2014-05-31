@@ -8,22 +8,23 @@ import java.io.InputStreamReader;
 public class Reader {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    static int readInt() {
+    static int readInt(String str)
+    {
         int value = 0;
+        boolean exitFlag = false;
 
-        try {
-            value = Integer.parseInt(br.readLine());
-        } catch (Exception e) {
-            System.out.println("Please input int value.");
+        while( exitFlag == false )
+        {
+            System.out.print(str);
+            try {
+                value = Integer.parseInt(br.readLine());
+                exitFlag = true;
+            } catch (Exception e) {
+                System.out.println("Please input int value.");
+            }
         }
 
         return value;
-    }
-
-    static int readInt(String str) {
-        System.out.print(str);
-
-        return readInt();
     }
 
 
