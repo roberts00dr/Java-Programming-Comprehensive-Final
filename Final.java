@@ -1,6 +1,9 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class Final implements Observer
 {
-    private boolean exitFlag = false;
+    private ArrayList rank = new ArrayList();
 
     public static void main(String[] args) {
         new Final();
@@ -8,21 +11,43 @@ public class Final implements Observer
 
     Final()
     {
-        ThreadRunner Tortoise = new ThreadRunner("Tortoise", 0, 10);
-        ThreadRunner Hare = new ThreadRunner("Hare", 90, 100);
+        ArrayList runners = new ArrayList();
 
-        Tortoise.addObserver(this);
-        Hare.addObserver(this);
+        runners.add(new ThreadRunner("Tortoise", 0, 10));
+        runners.add(new ThreadRunner("Hare", 90, 100));
+        runners.add(new ThreadRunner("Dog", 40, 50));
+        runners.add(new ThreadRunner("Cat", 75, 30));
 
-        Hare.start();
-        Tortoise.start();
+        Iterator it = runners.iterator();
+        while( it.hasNext() ) {
+            ThreadRunner r = (ThreadRunner)it.next();
+            r.addObserver(this);
+            r.start();
+        }
 
         try {
-            Hare.join();
-            Tortoise.join();
+            it = runners.iterator();
+            while( it.hasNext() ) {
+                ThreadRunner r = (ThreadRunner)it.next();
+                r.join();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        it = rank.iterator();
+        if( it.hasNext() )
+        {
+            System.out.println("The race is over! The " + it.next() + " is the winner.");
+            System.out.println("");
+        }
+
+        while( it.hasNext() )
+        {
+            System.out.println(it.next() + ": You beat me fair and square.");
+        }
+
+
     }
 
     @Override
@@ -35,8 +60,8 @@ public class Final implements Observer
 
         if( location >= 1000 )
         {
-            exitFlag = true;
             System.out.println(name + ": I finished!");
+            rank.add(name);
         }
     }
 }
