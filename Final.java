@@ -11,7 +11,7 @@ public class Final implements Observer
 
     Final()
     {
-        ArrayList runners = new ArrayList();
+        ArrayList<ThreadRunner> runners = new ArrayList<ThreadRunner>();
 
         runners.add(new ThreadRunner("Tortoise", 0, 10));
         runners.add(new ThreadRunner("Hare", 90, 100));
