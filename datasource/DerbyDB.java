@@ -1,10 +1,14 @@
+package datasource;
+
+import finalproject.ThreadRunner;
+
 import java.sql.*;
 import java.util.ArrayList;
 
 /**
  * Created by keta on 2014/05/31.
  */
-public class DerbyDB extends DataSource {
+public class DerbyDB implements DataSource {
     @Override
     public ArrayList getRunners() {
         ArrayList runners = new ArrayList();

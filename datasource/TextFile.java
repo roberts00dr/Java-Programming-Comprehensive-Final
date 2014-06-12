@@ -1,3 +1,8 @@
+package datasource;
+
+import finalproject.ThreadRunner;
+import finalproject.Reader;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -5,7 +10,7 @@ import java.util.StringTokenizer;
 /**
  * Created by keta on 2014/05/31.
  */
-public class TextFile extends DataSource
+public class TextFile implements DataSource
 {
     private static String seperator = "/ \t";
 

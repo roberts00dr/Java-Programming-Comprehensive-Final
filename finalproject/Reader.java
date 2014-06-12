@@ -1,3 +1,5 @@
+package finalproject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,7 +10,7 @@ import java.io.InputStreamReader;
 public class Reader {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    static int readInt(String str)
+    static public int readInt(String str)
     {
         int value = 0;
         boolean exitFlag = false;
@@ -28,7 +30,7 @@ public class Reader {
     }
 
 
-    static double readDouble(String str) {
+    static public double readDouble(String str) {
         double value = 0.0;
 
         while (true) {
@@ -44,7 +46,7 @@ public class Reader {
         return value;
     }
 
-    static String readString() {
+    static public String readString() {
         String value = "";
 
         try {
@@ -56,14 +58,14 @@ public class Reader {
         return value;
     }
 
-    static String readString(String str) {
+    static public String readString(String str) {
         System.out.print(str);
 
         return readString();
     }
 
 
-    static String ask(String question, String accept) {
+    static public String ask(String question, String accept) {
         String input;
 
         while (true) {

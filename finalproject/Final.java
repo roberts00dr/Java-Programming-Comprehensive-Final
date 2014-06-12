@@ -1,3 +1,10 @@
+package finalproject;
+
+import datasource.DataSource;
+import datasource.DerbyDB;
+import datasource.TextFile;
+import datasource.XML;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -63,33 +70,36 @@ public class Final implements Observer
 
         }
 
-        Iterator it = runners.iterator();
-        while( it.hasNext() ) {
-            ThreadRunner r = (ThreadRunner)it.next();
-            r.addObserver(this);
-            r.start();
-        }
-
-        try {
-            it = runners.iterator();
+        if( runners != null )
+        {
+            Iterator it = runners.iterator();
             while( it.hasNext() ) {
                 ThreadRunner r = (ThreadRunner)it.next();
-                r.join();
+                r.addObserver(this);
+                r.start();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        it = rank.iterator();
-        if( it.hasNext() )
-        {
-            System.out.println("The race is over! The " + it.next() + " is the winner.");
-            System.out.println("");
-        }
+            try {
+                it = runners.iterator();
+                while( it.hasNext() ) {
+                    ThreadRunner r = (ThreadRunner)it.next();
+                    r.join();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-        while( it.hasNext() )
-        {
-            System.out.println(it.next() + ": You beat me fair and square.");
+            it = rank.iterator();
+            if( it.hasNext() )
+            {
+                System.out.println("The race is over! The " + it.next() + " is the winner.");
+                System.out.println("");
+            }
+
+            while( it.hasNext() )
+            {
+                System.out.println(it.next() + ": You beat me fair and square.");
+            }
         }
 
         return false;
