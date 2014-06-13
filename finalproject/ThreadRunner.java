@@ -1,11 +1,11 @@
 package finalproject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 /**
- * Created by keta on 2014/05/30.
+ * Created by Keisuke Ueda on 2014/05/30.
+ * ThreadRunner class implements each runner.
  */
 public class ThreadRunner extends Thread
 {
@@ -14,15 +14,15 @@ public class ThreadRunner extends Thread
     private int speed;
     private int location = 0;
 
-    private ArrayList observers = new ArrayList();
+    private ArrayList<Observer> observers = new ArrayList<Observer>();
     private Random random = new Random();
 
 
     /**
      * Constructor
-     * @param Name
-     * @param RestPercentage
-     * @param RunnerSpeed
+     * @param Name the runner's name
+     * @param RestPercentage the runner rests based on the percentage
+     * @param RunnerSpeed the runner's speed
      */
     public ThreadRunner( String Name, int RestPercentage, int RunnerSpeed )
     {
@@ -63,10 +63,7 @@ public class ThreadRunner extends Thread
 
     public void notifyObservers()
     {
-        Iterator it = observers.iterator();
-        while( it.hasNext() )
-        {
-            Observer o = (Observer)it.next();
+        for (Observer o : observers) {
             o.update(this);
         }
     }
