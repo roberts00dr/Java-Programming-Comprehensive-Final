@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 public class Final implements Observer
 {
-    private ArrayList rank = new ArrayList();
+    private final ArrayList<String> rank = new ArrayList<String>();
 
     /**
      * the main function which just execute run() method.
@@ -35,11 +35,12 @@ public class Final implements Observer
     {
         System.out.println("Welcome to the Marathon Race Runner Program");
 
-        ArrayList runners = null;
+        ArrayList<ThreadRunner> runners = null;
 
         boolean continueFlag = false;
         int choice;
 
+        //noinspection PointlessBooleanExpression
         while( continueFlag == false )
         {
             DataSource source;
@@ -73,8 +74,8 @@ public class Final implements Observer
                     break;
                 case 4:
                     runners = new ArrayList<ThreadRunner>();
-                    runners.add(new ThreadRunner("Tortoise", 0, 10));
-                    runners.add(new ThreadRunner("Hare", 90, 100));
+                    runners.add(createThreadRunner("Tortoise", 0, 10));
+                    runners.add(createThreadRunner("Hare", 90, 100));
                     continueFlag = true;
                     break;
                 case 5:
@@ -94,6 +95,22 @@ public class Final implements Observer
         }
 
         return false;
+    }
+
+    /**
+     * @param name  is a runner's name.
+     * @param rest  is a rest rate.
+     * @param speed is runner's speed.
+     * @return is ThreadRunner instance.
+     */
+    private ThreadRunner createThreadRunner(String name, int rest, int speed) {
+        try {
+            return new ThreadRunner(name, rest, speed);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
     }
 
 
@@ -152,12 +169,12 @@ public class Final implements Observer
      * run mainRoutine
      * do loop until mainRoutine() returns true.
      */
-    public void run()
-    {
+    void run() {
         while( true )
         {
             rank.clear();
             boolean flag = mainRoutine();
+            //noinspection PointlessBooleanExpression
             if( flag == true )
                 break;
             else {

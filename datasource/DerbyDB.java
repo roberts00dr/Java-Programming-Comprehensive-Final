@@ -25,7 +25,8 @@ public class DerbyDB implements DataSource {
         try {
             connection = DriverManager.getConnection(dbUrl);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("For some reasons, this program could not connect to the database.");
+            System.err.println("Probably, someone is using the database now.");
         }
     }
 
@@ -40,12 +41,17 @@ public class DerbyDB implements DataSource {
         ResultSet resultSet = select();
 
         try {
-            while (resultSet.next()) {
+            while (resultSet != null && resultSet.next()) {
                 String name = resultSet.getString("NAME");
                 int speed = resultSet.getInt("RUNNERSPEED");
                 int rest = resultSet.getInt("RESTPERCENTAGE");
 
-                ThreadRunner runner = new ThreadRunner(name, rest, speed);
+                ThreadRunner runner = null;
+                try {
+                    runner = new ThreadRunner(name, rest, speed);
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
                 runners.add(runner);
             }
         } catch (SQLException e)
@@ -63,15 +69,16 @@ public class DerbyDB implements DataSource {
      */
     private ResultSet select() {
         ResultSet resultSet = null;
+        String sql = "SELECT * FROM runners";
 
         if (connection != null) {
             Statement statement;
             try {
                 statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT * FROM runners");
+                resultSet = statement.executeQuery(sql);
 
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.err.println("SQL error is occured on " + sql);
             }
         }
 

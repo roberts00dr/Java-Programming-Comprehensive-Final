@@ -5,16 +5,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Created by keta on 2014/05/30.
+ * Created by Keisuke Ueda on 2014/05/30.
+ * This is a class which helps to read something from stdin.
  */
+@SuppressWarnings("SameParameterValue")
 public class Reader {
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     static public int readInt(String str)
     {
         int value = 0;
         boolean exitFlag = false;
 
+        //noinspection PointlessBooleanExpression
         while( exitFlag == false )
         {
             System.out.print(str);
@@ -30,23 +33,25 @@ public class Reader {
     }
 
 
-    static public double readDouble(String str) {
-        double value = 0.0;
+// --Commented out by Inspection START (2014/06/13 12:50):
+//    static public double readDouble(String str) {
+//        double value;
+//
+//        while (true) {
+//            try {
+//                System.out.print(str);
+//                value = Double.parseDouble(br.readLine());
+//                break;
+//            } catch (Exception e) {
+//                System.out.println("Please input double value.");
+//            }
+//        }
+//
+//        return value;
+//    }
+// --Commented out by Inspection STOP (2014/06/13 12:50)
 
-        while (true) {
-            try {
-                System.out.print(str);
-                value = Double.parseDouble(br.readLine());
-                break;
-            } catch (Exception e) {
-                System.out.println("Please input double value.");
-            }
-        }
-
-        return value;
-    }
-
-    static public String readString() {
+    private static String readString() {
         String value = "";
 
         try {
@@ -65,13 +70,15 @@ public class Reader {
     }
 
 
-    static public String ask(String question, String accept) {
-        String input;
-
-        while (true) {
-            input = Reader.readString(question);
-            if (accept.indexOf(input.charAt(0)) != -1)
-                return input;
-        }
-    }
+// --Commented out by Inspection START (2014/06/13 12:50):
+//    static public String ask(String question, String accept) {
+//        String input;
+//
+//        while (true) {
+//            input = Reader.readString(question);
+//            if (accept.indexOf(input.charAt(0)) != -1)
+//                return input;
+//        }
+//    }
+// --Commented out by Inspection STOP (2014/06/13 12:50)
 }

@@ -40,7 +40,7 @@ public class XML implements DataSource {
 
 
     @Override
-    public ArrayList getRunners() {
+    public ArrayList<ThreadRunner> getRunners() {
 
         ArrayList<ThreadRunner> result = new ArrayList<ThreadRunner>();
 
@@ -79,8 +79,13 @@ public class XML implements DataSource {
                         int speed = Integer.parseInt(runnerSpeed);
                         int rest = Integer.parseInt(runnerRest);
 
-                        ThreadRunner tr = new ThreadRunner(runnerName, rest, speed);
-                        result.add(tr);
+                        ThreadRunner tr;
+                        try {
+                            tr = new ThreadRunner(runnerName, rest, speed);
+                            result.add(tr);
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
                     } catch (NumberFormatException ignored) {
 
                     }

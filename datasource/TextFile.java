@@ -11,9 +11,9 @@ import java.util.StringTokenizer;
  * Created by Keisuke Ueda on 2014/05/31.
  * This class reads a text file to create ThreadRunner objects.
  */
+@SuppressWarnings("UnusedParameters")
 public class TextFile implements DataSource
 {
-    private final String seperator = "/ \t";
     private BufferedReader bufferedReader = null;
 
     /**
@@ -35,56 +35,58 @@ public class TextFile implements DataSource
         }
     }
 
-    /**
-     * Lazy test
-     *
-     * @param i makes no sense.
-     */
-    @SuppressWarnings("This is a constructor for lazy test.")
-    public TextFile(int i) {
-        String input = "";
-        if (parse(input) != null)
-            System.err.println(input + " should return null but is not null.");
-
-        input = "Taro";
-        if (parse(input) != null)
-            System.err.println(input + " should return null but is not null.");
-
-        input = "Taro Jiro";
-        if (parse(input) != null)
-            System.err.println(input + " should return null but is not null.");
-
-        input = "Taro Jiro Sabro";
-        if (parse(input) != null)
-            System.err.println(input + " should return null but is not null.");
-
-        input = "Taro 10 Sabro";
-        if (parse(input) != null)
-            System.err.println(input + " should return null but is not null.");
-
-        input = "Taro Jiro 10";
-        if (parse(input) != null)
-            System.err.println(input + " should return null but is not null.");
-
-        input = "Taro 20 10";
-        if (parse(input) == null)
-            System.err.println(input + " should not return null but is null.");
-
-        input = "Taro 20 10 30";
-        if (parse(input) == null)
-            System.err.println(input + " should not return null but is null.");
-
-        input = "Taro Jiro Sabro shiro";
-        if (parse(input) != null)
-            System.err.println(input + " should return null but is not null.");
-    }
+// --Commented out by Inspection START (2014/06/13 12:50):
+//    /**
+//     * Lazy test
+//     *
+//     * @param i makes no sense.
+//     */
+//    @SuppressWarnings("This is a constructor for lazy test.")
+//    public TextFile(int i) {
+//        String input = "";
+//        if (parse(input) != null)
+//            System.err.println(input + " should return null but is not null.");
+//
+//        input = "Taro";
+//        if (parse(input) != null)
+//            System.err.println(input + " should return null but is not null.");
+//
+//        input = "Taro Jiro";
+//        if (parse(input) != null)
+//            System.err.println(input + " should return null but is not null.");
+//
+//        input = "Taro Jiro Sabro";
+//        if (parse(input) != null)
+//            System.err.println(input + " should return null but is not null.");
+//
+//        input = "Taro 10 Sabro";
+//        if (parse(input) != null)
+//            System.err.println(input + " should return null but is not null.");
+//
+//        input = "Taro Jiro 10";
+//        if (parse(input) != null)
+//            System.err.println(input + " should return null but is not null.");
+//
+//        input = "Taro 20 10";
+//        if (parse(input) == null)
+//            System.err.println(input + " should not return null but is null.");
+//
+//        input = "Taro 20 10 30";
+//        if (parse(input) == null)
+//            System.err.println(input + " should not return null but is null.");
+//
+//        input = "Taro Jiro Sabro shiro";
+//        if (parse(input) != null)
+//            System.err.println(input + " should return null but is not null.");
+//    }
+// --Commented out by Inspection STOP (2014/06/13 12:50)
 
     /**
      * Get ArrayList object which contains ThreadRunner objects.
      * The ResultSet methods such as getInt() throws exception when the data is invalid.
      */
     @Override
-    public ArrayList getRunners() {
+    public ArrayList<ThreadRunner> getRunners() {
         ArrayList<ThreadRunner> runners = new ArrayList<ThreadRunner>();
 
         try {
@@ -106,7 +108,8 @@ public class TextFile implements DataSource
      *
      * @param line is a line from the input text file.
      */
-    public ThreadRunner parse(String line) {
+    ThreadRunner parse(String line) {
+        String seperator = "/ \t";
         StringTokenizer st = new StringTokenizer(line, seperator);
         if (st.countTokens() >= 3) {
             String name = st.nextToken();
@@ -117,7 +120,11 @@ public class TextFile implements DataSource
                 int speed = Integer.parseInt(s);
                 int rest = Integer.parseInt(r);
 
-                return new ThreadRunner(name, rest, speed);
+                try {
+                    return new ThreadRunner(name, rest, speed);
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
             } catch (NumberFormatException e) {
                 System.out.println("NumberFormatException is raised.");
                 System.out.println("line: " + line);

@@ -9,13 +9,13 @@ import java.util.Random;
  */
 public class ThreadRunner extends Thread
 {
-    private String name;
-    private int rest;
-    private int speed;
+    private final String name;
+    private final int rest;
+    private final int speed;
+    private final int sleep = 100; // sleeps 100ms
+    private final ArrayList<Observer> observers = new ArrayList<Observer>();
+    private final Random random = new Random();
     private int location = 0;
-
-    private ArrayList<Observer> observers = new ArrayList<Observer>();
-    private Random random = new Random();
 
 
     /**
@@ -24,8 +24,14 @@ public class ThreadRunner extends Thread
      * @param RestPercentage the runner rests based on the percentage
      * @param RunnerSpeed the runner's speed
      */
-    public ThreadRunner( String Name, int RestPercentage, int RunnerSpeed )
+    public ThreadRunner(String Name, int RestPercentage, int RunnerSpeed) throws Exception
     {
+        if (!(0 <= RestPercentage && RestPercentage <= 100))
+            throw new Exception("Rest percentage must be between 0 and 100.");
+
+        if (RunnerSpeed < 0)
+            throw new Exception("Runner speed must be positive.");
+
         name = Name;
         rest = RestPercentage;
         speed = RunnerSpeed;
@@ -37,16 +43,16 @@ public class ThreadRunner extends Thread
         while( location < 1000 )
         {
             int r = random.nextInt(100);
-            if( r < rest )
+            if (r > rest)
             {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                location += speed;
             }
 
-            location += speed;
+            try {
+                Thread.sleep(sleep);
+            } catch (InterruptedException e) {
+                System.err.println("Something is happened in sleeping.");
+            }
             notifyObservers();
             try {
                 Thread.sleep(100);
@@ -61,7 +67,7 @@ public class ThreadRunner extends Thread
         observers.add(observer);
     }
 
-    public void notifyObservers()
+    void notifyObservers()
     {
         for (Observer o : observers) {
             o.update(this);
