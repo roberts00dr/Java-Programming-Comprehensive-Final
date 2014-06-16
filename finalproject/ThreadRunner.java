@@ -12,7 +12,6 @@ public class ThreadRunner extends Thread
     private final String name;
     private final int rest;
     private final int speed;
-    private final int sleep = 100; // sleeps 100ms
     private final ArrayList<Observer> observers = new ArrayList<Observer>();
     private final Random random = new Random();
     private int location = 0;
@@ -49,6 +48,7 @@ public class ThreadRunner extends Thread
             }
 
             try {
+                int sleep = 100;
                 Thread.sleep(sleep);
             } catch (InterruptedException e) {
                 System.err.println("Something is happened in sleeping.");

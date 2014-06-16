@@ -83,7 +83,6 @@ public class TextFile implements DataSource
 
     /**
      * Get ArrayList object which contains ThreadRunner objects.
-     * The ResultSet methods such as getInt() throws exception when the data is invalid.
      */
     @Override
     public ArrayList<ThreadRunner> getRunners() {
@@ -97,18 +96,18 @@ public class TextFile implements DataSource
                     runners.add(runner);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("An error has occured when reading a line from the input text file.");
         }
 
         return runners;
     }
 
     /**
-     * This method should be private but in order to test it is public.
+     * This method creates a ThreadRunner instance from a line of text;
      *
      * @param line is a line from the input text file.
      */
-    ThreadRunner parse(String line) {
+    private ThreadRunner parse(String line) {
         String seperator = "/ \t";
         StringTokenizer st = new StringTokenizer(line, seperator);
         if (st.countTokens() >= 3) {

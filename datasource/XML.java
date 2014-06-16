@@ -23,6 +23,11 @@ public class XML implements DataSource {
 
     private Document document = null;
 
+    /**
+     * Constructor
+     *
+     * @throws Exception is thrown when the specified file is not found.
+     */
     public XML() throws Exception {
         String filename = Reader.readString("Enter XML file name: ");
         try {
@@ -39,62 +44,155 @@ public class XML implements DataSource {
     }
 
 
+    /**
+     * Get ArrayList object which contains ThreadRunner objects.
+     *
+     * @return is an ArrayList object which contains ThreadRunner objects.
+     */
     @Override
     public ArrayList<ThreadRunner> getRunners() {
 
-        ArrayList<ThreadRunner> result = new ArrayList<ThreadRunner>();
+        ArrayList<ThreadRunner> runnersArrayList = null;
 
-        Node child = document.getFirstChild();
+        if (document.hasChildNodes()) {
+            Node child = document.getFirstChild();
+
+            while (child != null) {
+                runnersArrayList = findRunnersNode(child);
+                child = child.getNextSibling();
+            }
+        }
+
+        return runnersArrayList;
+    }
+
+    /**
+     * Look for a Runners node, then pass it to traceRunnersNode() function.
+     *
+     * @param child is a child node.
+     * @return is an ArrayList object which contains ThreadRunner objects.
+     */
+    private ArrayList<ThreadRunner> findRunnersNode(Node child) {
+        ArrayList<ThreadRunner> runnersArrayList = null;
 
         if (child.getNodeName().equals("Runners")) {
-            NodeList runners = child.getChildNodes();
-            for (int i = 0; i < runners.getLength(); i++) {
-                Node eachRunner = runners.item(i);
-                if (eachRunner.getNodeName().equals("Runner")) {
-                    String runnerName = "";
-                    String runnerSpeed = "";
-                    String runnerRest = "";
+            runnersArrayList = traceRunnersNode(child);
+        }
 
-                    NamedNodeMap attrs = eachRunner.getAttributes();
-                    if (attrs != null) {
-                        Node name = attrs.getNamedItem("Name");
-                        runnerName = name.getNodeValue();
-                    }
+        return runnersArrayList;
+    }
 
-                    NodeList parameters = eachRunner.getChildNodes();
+    /**
+     * Look for some Runner nodes which Runners node contains, then pass them to traceEachRunnerNode() function.
+     *
+     * @param child is a Runners node because findRunnersNode looks for a Runners node then pass it to this function.
+     * @return is an ArrayList object which contains ThreadRunner objects.
+     */
+    private ArrayList<ThreadRunner> traceRunnersNode(Node child) {
+        ArrayList<ThreadRunner> runnersArrayList = new ArrayList<ThreadRunner>();
 
-                    for (int j = 0; j < parameters.getLength(); j++) {
-                        Node n = parameters.item(j);
-
-                        if (n.getNodeName().equals("RunnersMoveIncrement")) {
-                            runnerSpeed = n.getTextContent();
-                        }
-
-                        if (n.getNodeName().equals("RestPercentage")) {
-                            runnerRest = n.getTextContent();
-                        }
-                    }
-
-                    try {
-                        int speed = Integer.parseInt(runnerSpeed);
-                        int rest = Integer.parseInt(runnerRest);
-
-                        ThreadRunner tr;
-                        try {
-                            tr = new ThreadRunner(runnerName, rest, speed);
-                            result.add(tr);
-                        } catch (Exception e) {
-                            System.out.println(e.getMessage());
-                        }
-                    } catch (NumberFormatException ignored) {
-
-                    }
+        NodeList runners = child.getChildNodes();
+        for (int i = 0; i < runners.getLength(); i++) {
+            Node eachRunner = runners.item(i);
+            if (eachRunner.getNodeName().equals("Runner")) {
+                ThreadRunner tr = traceEachRunnerNode(eachRunner);
+                if (tr != null) {
+                    runnersArrayList.add(tr);
                 }
             }
         }
 
-
-        return result;
+        return runnersArrayList;
     }
 
+    /**
+     * Creates a ThreadRunner instance from a Runner node.
+     *
+     * @param eachRunner is a Runner node.
+     * @return ThreadRunner instance.
+     */
+    private ThreadRunner traceEachRunnerNode(Node eachRunner) {
+        String name;
+        String speed;
+        String rest;
+
+        name = getName(eachRunner);
+        if (name == null)
+            return null;
+
+        speed = getChild(eachRunner, "RunnersMoveIncrement");
+        if (speed == null)
+            return null;
+
+        rest = getChild(eachRunner, "RestPercentage");
+        if (rest == null)
+            return null;
+
+        return createThreadRunner(name, speed, rest);
+    }
+
+    /**
+     * Gets a node value from a node named "Name".
+     *
+     * @param eachRunner is a Runner node.
+     * @return Runner name.
+     */
+    private String getName(Node eachRunner) {
+        String runnerName = null;
+        NamedNodeMap attrs = eachRunner.getAttributes();
+        if (attrs != null) {
+            Node name = attrs.getNamedItem("Name");
+            runnerName = name.getNodeValue();
+        }
+        return runnerName;
+    }
+
+    /**
+     * Looks for nodeName node and returns textContent of the node named nodeName.
+     *
+     * @param eachRunner is a Runner node.
+     * @param nodeName   is a child node named nodeName.
+     * @return textContent.
+     */
+    private String getChild(Node eachRunner, String nodeName) {
+        NodeList parameters = eachRunner.getChildNodes();
+
+        for (int i = 0; i < parameters.getLength(); i++) {
+            Node n = parameters.item(i);
+            if (n.getNodeName().equals(nodeName)) {
+                return n.getTextContent();
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Creates a ThreadRunner instance.
+     *
+     * @param runnerName  is a name of the runner.
+     * @param runnerSpeed is speed of the runner.
+     * @param runnerRest  is a value how often the runner rests.
+     * @return ThreadRunner instance.
+     */
+    private ThreadRunner createThreadRunner(String runnerName, String runnerSpeed, String runnerRest) {
+        try {
+            int speed = Integer.parseInt(runnerSpeed);
+            int rest = Integer.parseInt(runnerRest);
+
+            ThreadRunner tr;
+            try {
+                tr = new ThreadRunner(runnerName, rest, speed);
+                return tr;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.err.println("Either " + runnerSpeed + " or " + runnerRest + " is not a number.");
+                return null;
+            }
+        } catch (NumberFormatException ignored) {
+            System.err.println("Either " + runnerSpeed + " or " + runnerRest + " is not a number.");
+            return null;
+        }
+    }
 }
